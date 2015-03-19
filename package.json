@@ -1,10 +1,10 @@
 {
   "name": "plugin-registry",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Maintains a general purpose registry of plugins",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./node_modules/jasmine-node/bin/jasmine-node test"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/bguiz/plugin-registry/issues"
   },
-  "homepage": "https://github.com/bguiz/plugin-registry"
+  "homepage": "https://github.com/bguiz/plugin-registry",
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
+  }
 }
