@@ -135,7 +135,7 @@ function get(registryName) {
     return (fluent.registry[category] || []);
   };
 
-  fluent.getFullRegistry = function getAllPlugins() {
+  fluent.getFullRegistry = function getFullPluginRegistry() {
     return fluent.registry;
   };
 
@@ -144,6 +144,11 @@ function get(registryName) {
   return fluent;
 }
 
+function reset() {
+  registries = {};
+}
+
 module.exports = {
   get: get,
+  reset: reset,
 };
