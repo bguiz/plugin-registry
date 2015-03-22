@@ -31,12 +31,12 @@ function parsePluginDefinition(pluginDefinition, options) {
     throw new Error('Plugins should have a category');
   }
 
-  if (typeof pluginDefinition.requirePath !== 'string') {
+  var requirePath = pluginDefinition.requirePath;
+  if (typeof requirePath !== 'string') {
     var projectPath = (options.projectPath || path.resolve(__dirname, '../..'));
     if (!isAbsolutePath(projectPath)) {
       throw new Error('Project path should be an absolute path');
     }
-    var requirePath;
     [
       // first, check if this plugin is installed as one of angularity's own dependencies
       path.resolve(projectPath, 'node_modules', name),
@@ -59,18 +59,18 @@ function parsePluginDefinition(pluginDefinition, options) {
         }
       }
     });
+  }
 
-    // if none of these exist, then the plugin cannot be found
-    // fail immediately
-    if (!requirePath) {
-      throw new Error('Unable to find require path for plugin named ' + name);
-    }
-    else if (!isAbsolutePath(requirePath)) {
-      throw new Error('Require path must be resolved to an absolute path');
-    }
-    else {
-      pluginDefinition.requirePath = requirePath;
-    }
+  // if none of these exist, then the plugin cannot be found
+  // fail immediately
+  if (!requirePath) {
+    throw new Error('Unable to find require path for plugin named ' + name);
+  }
+  else if (!isAbsolutePath(requirePath)) {
+    throw new Error('Require path should resolve to an absolute path');
+  }
+  else {
+    pluginDefinition.requirePath = requirePath;
   }
 
   return pluginDefinition;
@@ -85,9 +85,13 @@ function get(registryName) {
   if (!registryName) {
     registryName = DEFAULT_REGISTRY_NAME;
   }
+  if (typeof registryName !== 'string' || registryName.length < 1) {
+    throw new Error('Invalid name for registry');
+  }
   var fluent = registries[registryName];
 
   // If a registry by this name exists, simply return it
+  // (Multiton pattern)
   if (!!fluent) {
     return fluent;
   }
@@ -111,12 +115,13 @@ function get(registryName) {
     return fluent;
   };
 
-  fluent.add = function addPlugin(pluginDefinition) {
-    if (pluginDefinition.constructor === Array) {
-      pluginDefinition.forEach(fluent.add);
-      return fluent;
-    }
+  fluent.add = function addPlugins() {
+    var pluginDefinitions = [].concat(Array.prototype.slice.apply(arguments));
+    pluginDefinitions.forEach(addPluginImpl);
+    return fluent;
+  };
 
+  function addPluginImpl(pluginDefinition) {
     var parsedDefinition = parsePluginDefinition(pluginDefinition, options);
 
     // add to the appropriate registry
@@ -127,15 +132,13 @@ function get(registryName) {
       fluent.registry[category] = registryCategory;
     }
     registryCategory.push(parsedDefinition);
-
-    return fluent;
-  };
+  }
 
   fluent.getAllOfCategory = function getAllPluginsOfCategory(category) {
     return (fluent.registry[category] || []);
   };
 
-  fluent.getFullRegistry = function getAllPlugins() {
+  fluent.getFullRegistry = function getFullPluginRegistry() {
     return fluent.registry;
   };
 
@@ -144,6 +147,11 @@ function get(registryName) {
   return fluent;
 }
 
+function reset() {
+  registries = {};
+}
+
 module.exports = {
   get: get,
+  reset: reset,
 };
