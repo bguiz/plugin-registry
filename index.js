@@ -142,6 +142,10 @@ function get(registryName) {
     return fluent.registry;
   };
 
+  fluent.getOptions = function getOptions() {
+    return options;
+  };
+
   registries[registryName] = fluent;
 
   return fluent;
