@@ -1,6 +1,6 @@
 {
   "name": "plugin-registry",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Maintains a general purpose registry of plugins",
   "main": "index.js",
   "scripts": {
