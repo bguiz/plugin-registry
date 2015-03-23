@@ -116,7 +116,11 @@ function get(registryName) {
   };
 
   fluent.add = function addPlugins() {
-    var pluginDefinitions = [].concat(Array.prototype.slice.apply(arguments));
+    var argumentsAsArray = Array.prototype.slice.apply(arguments);
+    var pluginDefinitions = [];
+    argumentsAsArray.forEach(function(argument) {
+      pluginDefinitions = pluginDefinitions.concat(argument);
+    });
     pluginDefinitions.forEach(addPluginImpl);
     return fluent;
   };
