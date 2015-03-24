@@ -17,11 +17,11 @@ describe('[basic]', function() {
         var instance = pluginRegistry.get();
         expect(instance).toBeDefined();
         expect(typeof instance.registry).toBe('object');
-        expect(typeof instance.options).toBe('function');
+        expect(typeof instance.context).toBe('function');
         expect(typeof instance.add).toBe('function');
         expect(typeof instance.getAllOfCategory).toBe('function');
         expect(typeof instance.getFullRegistry).toBe('function');
-        expect(typeof instance.getOptions).toBe('function');
+        expect(typeof instance.getContext).toBe('function');
         done();
       });
 
@@ -67,38 +67,16 @@ describe('[basic]', function() {
         done();
       });
 
-      it('Should allow options to be set on a registry exactly once', function(done) {
+      it('Should allow context to be set on a registry exactly once', function(done) {
         var instance2;
         instance2 = pluginRegistry.get('foo');
         expect(function() {
-          instance2.options({ myOption: 123 });
+          instance2.context({ myOption: 123 });
         }).not.toThrow();
         expect(function() {
-          instance2.options({ myOption: 456 });
-        }).toThrowError('Can only set options once for registry foo');
+          instance2.context({ myOption: 456 });
+        }).toThrowError('Can only set context once for registry foo');
         done();
-      });
-    });
-
-    describe('[add one plugin]', function() {
-      //TODO replace with `beforeAll` once we get jasmine 2.1
-      beforeEach(function(done) {
-        helper.createPlugin({
-          requirePath: './node_modules/foo-plugin',
-          name: 'foo-plugin',
-          category: 'generic-plugin',
-        }, function onPluginCreated() {
-          done();
-        });
-      });
-
-      //TODO replace with `afterAll` once we get jasmine 2.1
-      afterEach(function(done) {
-        helper.cleanUpPlugin({
-          requirePath: './node_modules/foo-plugin',
-        }, function onPluginRemoved() {
-          done();
-        });
       });
 
       it('Should validate plugin definitions', function(done) {
@@ -132,6 +110,24 @@ describe('[basic]', function() {
         }).toThrowError('Require path should resolve to an absolute path');
 
         done();
+      });
+    });
+
+    describe('[add one plugin]', function() {
+      //TODO replace with `beforeAll` once we get jasmine 2.1
+      beforeEach(function() {
+        helper.createPlugin({
+          requirePath: './node_modules/foo-plugin',
+          name: 'foo-plugin',
+          category: 'generic-plugin',
+        });
+      });
+
+      //TODO replace with `afterAll` once we get jasmine 2.1
+      afterEach(function() {
+        helper.cleanUpPlugin({
+          requirePath: './node_modules/foo-plugin',
+        });
       });
 
       //TODO @bguiz - remaining tests
@@ -184,11 +180,178 @@ describe('[basic]', function() {
     });
 
     describe('[add multiple plugins]', function() {
-      it('Should register multiple plugins specified as an array');
+      //TODO replace with `beforeAll` once we get jasmine 2.1
+      beforeEach(function() {
+        helper.createPlugin({
+          requirePath: './node_modules/foo-plugin',
+          name: 'foo-plugin',
+          category: 'generic-plugin',
+        });
+        helper.createPlugin({
+          requirePath: './node_modules/bar-plugin',
+          name: 'bar-plugin',
+          category: 'generic-plugin',
+        });
+      });
 
-      it('Should register multiple plugins specified as arguments');
+      //TODO replace with `afterAll` once we get jasmine 2.1
+      afterEach(function() {
+        helper.cleanUpPlugin({
+          requirePath: './node_modules/foo-plugin',
+        });
+        helper.cleanUpPlugin({
+          requirePath: './node_modules/bar-plugin',
+        });
+      });
 
-      it('Should test for files in the various possible locations');
+      it('Should register multiple plugins specified as arguments', function(done) {
+        var instance2;
+        instance2 = pluginRegistry.get('foo');
+        expect(function() {
+          instance2.add({
+            requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
+            name: 'foo-plugin',
+            category: 'generic-plugin',
+          }, {
+            requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
+            name: 'bar-plugin',
+            category: 'generic-plugin',
+          });
+        }).not.toThrow();
+        done();
+      });
+
+      it('Should register multiple plugins specified as an array', function(done) {
+        var instance2;
+        instance2 = pluginRegistry.get('foo');
+        expect(function() {
+          var pluginDefintions = [
+            {
+              requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            },
+            {
+              requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
+              name: 'bar-plugin',
+              category: 'generic-plugin',
+            }
+          ];
+          instance2.add(pluginDefintions);
+        }).not.toThrow();
+        done();
+      });
+
+      it('Should register multiple plugins fluently', function(done) {
+        expect(function() {
+          pluginRegistry
+            .get('foo')
+            .add({
+              requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            })
+            .add({
+              requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
+              name: 'bar-plugin',
+              category: 'generic-plugin',
+            });
+        }).not.toThrow();
+        done();
+      });
+    });
+
+    describe('[plugins in different locations]', function() {
+      var toolLocalBasePath = path.resolve(__dirname, '..');
+      var projectLocalBasePath = path.resolve(__dirname, '../plugin-registry-test-temp-folder/project/another');
+
+      var toolLocalPath = path.resolve(toolLocalBasePath, './node_modules/tool-local-plugin');
+      var projectLocalPath = path.resolve(projectLocalBasePath, './node_modules/project-local-plugin');
+      var globalPath = path.resolve(toolLocalBasePath, '../global-plugin');
+
+      console.log('toolLocalPath', toolLocalPath);
+      console.log('projectLocalPath', projectLocalPath);
+      console.log('globalPath', globalPath);
+
+      //TODO replace with `beforeAll` once we get jasmine 2.1
+      beforeEach(function() {
+        helper.createPlugin({
+          requirePath: toolLocalPath,
+          name: 'tool-local-plugin',
+          category: 'generic-plugin',
+        });
+        helper.createPlugin({
+          requirePath: projectLocalPath,
+          name: 'project-local-plugin',
+          category: 'generic-plugin',
+        });
+        helper.createPlugin({
+          requirePath: globalPath,
+          name: 'global-plugin',
+          category: 'generic-plugin',
+        });
+      });
+
+      //TODO replace with `afterAll` once we get jasmine 2.1
+      afterEach(function() {
+        helper.cleanUpPlugin({
+          requirePath: toolLocalPath,
+        });
+        helper.cleanUpPlugin({
+          requirePath: projectLocalPath,
+        });
+        helper.cleanUpPlugin({
+          requirePath: globalPath,
+        });
+      });
+
+      it('Should test for files in tool local location', function(done) {
+        expect(function() {
+          pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'tool-local-plugin',
+              category: 'generic-plugin',
+            });
+        }).not.toThrow();
+        done();
+      });
+
+      it('Should test for files in project local location', function(done) {
+        expect(function() {
+          pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'project-local-plugin',
+              category: 'generic-plugin',
+            });
+        }).not.toThrow();
+        done();
+      });
+
+      it('Should test for files in global location', function(done) {
+        expect(function() {
+          pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'global-plugin',
+              category: 'generic-plugin',
+            });
+        }).not.toThrow();
+        done();
+      });
     });
 
     describe('[query registry]', function() {
