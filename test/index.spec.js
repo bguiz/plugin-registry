@@ -263,15 +263,12 @@ describe('[basic]', function() {
 
     describe('[plugins in different locations]', function() {
       var toolLocalBasePath = path.resolve(__dirname, '..');
-      var projectLocalBasePath = path.resolve(__dirname, '../plugin-registry-test-temp-folder/project/another');
+      var projectLocalRootPath = path.resolve(__dirname, '../plugin-registry-test-temp-folder');
+      var projectLocalBasePath = path.resolve(projectLocalRootPath, 'project/another');
 
       var toolLocalPath = path.resolve(toolLocalBasePath, './node_modules/tool-local-plugin');
       var projectLocalPath = path.resolve(projectLocalBasePath, './node_modules/project-local-plugin');
       var globalPath = path.resolve(toolLocalBasePath, '../global-plugin');
-
-      console.log('toolLocalPath', toolLocalPath);
-      console.log('projectLocalPath', projectLocalPath);
-      console.log('globalPath', globalPath);
 
       //TODO replace with `beforeAll` once we get jasmine 2.1
       beforeEach(function() {
@@ -298,16 +295,94 @@ describe('[basic]', function() {
           requirePath: toolLocalPath,
         });
         helper.cleanUpPlugin({
-          requirePath: projectLocalPath,
+          requirePath: projectLocalRootPath,
         });
         helper.cleanUpPlugin({
           requirePath: globalPath,
         });
       });
 
-      it('Should test for files in tool local location', function(done) {
-        expect(function() {
-          pluginRegistry
+      describe('[test for files]', function() {
+        it('Should test for files in tool local location', function(done) {
+          expect(function() {
+            pluginRegistry
+              .get('foo')
+              .context({
+                toolPath: toolLocalBasePath,
+                projectPath: projectLocalBasePath,
+              })
+              .add({
+                name: 'tool-local-plugin',
+                category: 'generic-plugin',
+              });
+          }).not.toThrow();
+
+          done();
+        });
+
+        it('Should test for files in project local location', function(done) {
+          expect(function() {
+            pluginRegistry
+              .get('foo')
+              .context({
+                toolPath: toolLocalBasePath,
+                projectPath: projectLocalBasePath,
+              })
+              .add({
+                name: 'project-local-plugin',
+                category: 'generic-plugin',
+              });
+          }).not.toThrow();
+
+          done();
+        });
+
+        it('Should test for files in global location', function(done) {
+          expect(function() {
+            pluginRegistry
+              .get('foo')
+              .context({
+                toolPath: toolLocalBasePath,
+                projectPath: projectLocalBasePath,
+              })
+              .add({
+                name: 'global-plugin',
+                category: 'generic-plugin',
+              });
+          }).not.toThrow();
+
+          done();
+        });
+
+        it('Should test for files in all locations', function(done) {
+          expect(function() {
+            pluginRegistry
+              .get('foo')
+              .context({
+                toolPath: toolLocalBasePath,
+                projectPath: projectLocalBasePath,
+              })
+              .add({
+                name: 'tool-local-plugin',
+                category: 'generic-plugin',
+              })
+              .add({
+                name: 'project-local-plugin',
+                category: 'generic-plugin',
+              })
+              .add({
+                name: 'global-plugin',
+                category: 'generic-plugin',
+              });
+          }).not.toThrow();
+
+          done();
+        });
+      });
+
+      describe('[query registry]', function() {
+        it('Should clear registry when reset called', function(done) {
+          var instance2 = pluginRegistry
             .get('foo')
             .context({
               toolPath: toolLocalBasePath,
@@ -316,52 +391,110 @@ describe('[basic]', function() {
             .add({
               name: 'tool-local-plugin',
               category: 'generic-plugin',
-            });
-        }).not.toThrow();
-        done();
-      });
-
-      it('Should test for files in project local location', function(done) {
-        expect(function() {
-          pluginRegistry
-            .get('foo')
-            .context({
-              toolPath: toolLocalBasePath,
-              projectPath: projectLocalBasePath,
             })
             .add({
               name: 'project-local-plugin',
               category: 'generic-plugin',
-            });
-        }).not.toThrow();
-        done();
-      });
-
-      it('Should test for files in global location', function(done) {
-        expect(function() {
-          pluginRegistry
-            .get('foo')
-            .context({
-              toolPath: toolLocalBasePath,
-              projectPath: projectLocalBasePath,
             })
             .add({
               name: 'global-plugin',
               category: 'generic-plugin',
             });
-        }).not.toThrow();
-        done();
+
+          expect(function() {
+            pluginRegistry.reset();
+          }).not.toThrow();
+
+          instance2 = pluginRegistry.get('foo');
+          expect(instance2.getFullRegistry()).toEqual({});
+          expect(instance2.getAllOfCategory('generic-plugin')).toEqual([]);
+
+          done();
+        });
+
+        it('Should get empty array when get all of category called on category that does not yet exist', function(done) {
+          var instance2 = pluginRegistry
+            .get('foo');
+          expect(instance2.getAllOfCategory('generic-plugin')).toEqual([]);
+
+          instance2
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'tool-local-plugin',
+              category: 'generic-plugin',
+            })
+            .add({
+              name: 'project-local-plugin',
+              category: 'generic-plugin',
+            })
+            .add({
+              name: 'global-plugin',
+              category: 'generic-plugin',
+            });
+          expect(instance2.getAllOfCategory('non-existent-category')).toEqual([]);
+
+          done();
+        });
+
+        it('Should get all of one category', function(done) {
+          var instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'tool-local-plugin',
+              category: 'plugin-type-1',
+            })
+            .add({
+              name: 'project-local-plugin',
+              category: 'plugin-type-2',
+            })
+            .add({
+              name: 'global-plugin',
+              category: 'plugin-type-2',
+            });
+
+          instance2 = pluginRegistry.get('foo');
+          expect(instance2.getAllOfCategory('plugin-type-1').length).toEqual(1);
+          expect(instance2.getAllOfCategory('plugin-type-2').length).toEqual(2);
+
+          done();
+        });
+
+        it('Should get entire registry', function(done) {
+          var instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'tool-local-plugin',
+              category: 'plugin-type-1',
+            })
+            .add({
+              name: 'project-local-plugin',
+              category: 'plugin-type-2',
+            })
+            .add({
+              name: 'global-plugin',
+              category: 'plugin-type-2',
+            });
+
+          instance2 = pluginRegistry.get('foo');
+          var registry = instance2.getFullRegistry();
+          expect(registry['plugin-type-1'].length).toEqual(1);
+          expect(registry['plugin-type-2'].length).toEqual(2);
+
+          done();
+        });
       });
     });
 
-    describe('[query registry]', function() {
-      it('Should clear registry when reset called');
-
-      it('Should get all of one category');
-
-      it('Should get empty array when get all of category called on category that does not yet exist');
-
-      it('Should get entire registry');
-    });
   });
 });
