@@ -10,10 +10,10 @@ function isAbsolutePath(pathToTest) {
   return (path.resolve(pathToTest) === path.normalize(pathToTest));
 }
 
-function parsePluginDefinition(pluginDefinition, options) {
+function parsePluginDefinition(pluginDefinition, context) {
   if (typeof pluginDefinition === 'string') {
     pluginDefinition = {
-      category: (options.defaultPluginCategory || DEFAULT_PLUGIN_CATEGORY),
+      category: (context.defaultPluginCategory || DEFAULT_PLUGIN_CATEGORY),
       name: pluginDefinition
     };
   }
@@ -32,23 +32,30 @@ function parsePluginDefinition(pluginDefinition, options) {
   }
 
   var requirePath = pluginDefinition.requirePath;
+  var plugin;
+
+  var failedRequirePaths = [];
   if (typeof requirePath !== 'string') {
-    var projectPath = (options.projectPath || path.resolve(__dirname, '../..'));
+    var toolPath = (context.toolPath || path.resolve(__dirname, '../..'));
+    var projectPath = (context.projectPath || path.resolve('.'));
+    if (!isAbsolutePath(toolPath)) {
+      throw new Error('Tool path should be an absolute path');
+    }
     if (!isAbsolutePath(projectPath)) {
       throw new Error('Project path should be an absolute path');
     }
     [
-      // first, check if this plugin is installed as one of angularity's own dependencies
-      path.resolve(projectPath, 'node_modules', name),
+      // first, check if this plugin is installed as one of tool's own dependencies
+      path.resolve(toolPath, 'node_modules', name),
       // if not, check if this plugin is installed in the local project
-      path.resolve('node_modules', name),
+      path.resolve(projectPath, 'node_modules', name),
       // lastly, check if this plugin is installed as a global installation
-      // (sibling folder to angularity itself)
-      path.resolve(projectPath, '..', name)
+      // (sibling folder to tool itself)
+      path.resolve(toolPath, '..', name)
     ].forEach(function testPossibleRequirePathForPlugin(pathToTest) {
       if (!requirePath) {
         try {
-          require(pathToTest);
+          plugin = require(pathToTest);
           // If require of the path did not throw, then we should use this path
           requirePath = pathToTest;
           // console.log('Plugin '+name+' will be loaded from ' + requirePath);
@@ -56,6 +63,7 @@ function parsePluginDefinition(pluginDefinition, options) {
         catch (e) {
           // Do nothing
           // console.log('Plugin '+name+' failed to load from ' + pathToTest);
+          failedRequirePaths.push(pathToTest);
         }
       }
     });
@@ -64,13 +72,18 @@ function parsePluginDefinition(pluginDefinition, options) {
   // if none of these exist, then the plugin cannot be found
   // fail immediately
   if (!requirePath) {
-    throw new Error('Unable to find require path for plugin named ' + name);
+    throw new Error([
+      'Unable to find require path for plugin named '+name+':'
+    ]
+      .concat(failedRequirePaths)
+      .join('\n'));
   }
   else if (!isAbsolutePath(requirePath)) {
     throw new Error('Require path should resolve to an absolute path');
   }
   else {
     pluginDefinition.requirePath = requirePath;
+    pluginDefinition.plugin = plugin;
   }
 
   return pluginDefinition;
@@ -79,8 +92,8 @@ function parsePluginDefinition(pluginDefinition, options) {
 var registries = {};
 
 function get(registryName) {
-  var options = {};
-  var optionsHaveBeenSet = false;
+  var context = {};
+  var contextHasBeenSet = false;
 
   if (!registryName) {
     registryName = DEFAULT_REGISTRY_NAME;
@@ -102,15 +115,15 @@ function get(registryName) {
     registry: {},
   };
 
-  fluent.options = function setOptions(newOptions) {
-    if (!newOptions) {
-      throw new Error('Invalid options');
+  fluent.context = function setContext(newContext) {
+    if (!newContext) {
+      throw new Error('Invalid context');
     }
-    if (optionsHaveBeenSet) {
-      throw new Error('Can only set options once for registry '+registryName);
+    if (contextHasBeenSet) {
+      throw new Error('Can only set context once for registry '+registryName);
     }
-    options = newOptions;
-    optionsHaveBeenSet = true;
+    context = newContext;
+    contextHasBeenSet = true;
 
     return fluent;
   };
@@ -126,7 +139,7 @@ function get(registryName) {
   };
 
   function addPluginImpl(pluginDefinition) {
-    var parsedDefinition = parsePluginDefinition(pluginDefinition, options);
+    var parsedDefinition = parsePluginDefinition(pluginDefinition, context);
 
     // add to the appropriate registry
     var category = parsedDefinition.category;
@@ -146,8 +159,8 @@ function get(registryName) {
     return fluent.registry;
   };
 
-  fluent.getOptions = function getOptions() {
-    return options;
+  fluent.getContext = function getContext() {
+    return context;
   };
 
   registries[registryName] = fluent;
