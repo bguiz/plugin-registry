@@ -115,9 +115,48 @@ describe('[basic]', function() {
       });
     });
 
-    describe('[add one plugin]', function() {
-      beforeEach(resetRegistry);
+    describe('[add one plugin CWD relative]', function() {
+      var cwdRelativePluginRootPath = path.resolve(__dirname, 'node_modules');
+      var cwdRelativePluginPath = path.resolve(cwdRelativePluginRootPath, 'foo-plugin');
 
+      //TODO replace with `beforeAll` once we get jasmine 2.1
+      beforeEach(function() {
+        helper.createPlugin({
+          requirePath: cwdRelativePluginPath,
+          name: 'foo-plugin',
+          category: 'generic-plugin',
+        });
+      });
+
+      //TODO replace with `afterAll` once we get jasmine 2.1
+      afterEach(function() {
+        helper.cleanUpPlugin({
+          requirePath: cwdRelativePluginRootPath,
+        });
+      });
+
+      describe('[]', function() {
+        beforeEach(resetRegistry);
+
+        it('Should register a single plugin', function(done) {
+          var instance2;
+          instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              // No toolPath
+            });
+          expect(function() {
+            instance2.add({
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            });
+          }).not.toThrow();
+          done();
+        });
+      });
+    });
+
+    describe('[add one plugin]', function() {
       //TODO replace with `beforeAll` once we get jasmine 2.1
       beforeEach(function() {
         helper.createPlugin({
@@ -134,58 +173,59 @@ describe('[basic]', function() {
         });
       });
 
-      //TODO @bguiz - remaining tests
-      it('Should register a single plugin', function(done) {
-        var instance2;
-        instance2 = pluginRegistry.get('foo');
-        expect(function() {
-          instance2.add({
-            name: 'foo-plugin',
-            category: 'generic-plugin',
-          });
-        }).not.toThrow();
-        done();
-      });
+      describe('[]', function() {
+        beforeEach(resetRegistry);
 
-      it('Should register a single plugin with string (name) only', function(done) {
-        var instance2;
-        instance2 = pluginRegistry.get('foo');
-        expect(function() {
-          instance2.add('foo-plugin');
-        }).not.toThrow();
-        done();
-      });
+        it('Should register a single plugin', function(done) {
+          var instance2;
+          instance2 = pluginRegistry.get('foo');
+          expect(function() {
+            instance2.add({
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            });
+          }).not.toThrow();
+          done();
+        });
 
-      it('Should load plugin with a explicit require path', function(done) {
-        var instance2;
-        instance2 = pluginRegistry.get('foo');
-        expect(function() {
-          instance2.add({
-            requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
-            name: 'foo-plugin',
-            category: 'generic-plugin',
-          });
-        }).not.toThrow();
-        done();
-      });
+        it('Should register a single plugin with string (name) only', function(done) {
+          var instance2;
+          instance2 = pluginRegistry.get('foo');
+          expect(function() {
+            instance2.add('foo-plugin');
+          }).not.toThrow();
+          done();
+        });
 
-      it('Should not load a plugin with an explicit require path where the path is not absolute', function(done) {
-        var instance2;
-        instance2 = pluginRegistry.get('foo');
-        expect(function() {
-          instance2.add({
-            requirePath: '../node_modules/foo-plugin',
-            name: 'foo-plugin',
-            category: 'generic-plugin',
-          });
-        }).toThrowError('Require path specified should be an absolute path');
-        done();
+        it('Should load plugin with a explicit require path', function(done) {
+          var instance2;
+          instance2 = pluginRegistry.get('foo');
+          expect(function() {
+            instance2.add({
+              requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            });
+          }).not.toThrow();
+          done();
+        });
+
+        it('Should not load a plugin with an explicit require path where the path is not absolute', function(done) {
+          var instance2;
+          instance2 = pluginRegistry.get('foo');
+          expect(function() {
+            instance2.add({
+              requirePath: '../node_modules/foo-plugin',
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            });
+          }).toThrowError('Require path specified should be an absolute path');
+          done();
+        });
       });
     });
 
     describe('[add multiple plugins]', function() {
-      beforeEach(resetRegistry);
-
       //TODO replace with `beforeAll` once we get jasmine 2.1
       beforeEach(function() {
         helper.createPlugin({
@@ -210,61 +250,66 @@ describe('[basic]', function() {
         });
       });
 
-      it('Should register multiple plugins specified as arguments', function(done) {
-        var instance2;
-        instance2 = pluginRegistry.get('foo');
-        expect(function() {
-          instance2.add({
-            requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
-            name: 'foo-plugin',
-            category: 'generic-plugin',
-          }, {
-            requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
-            name: 'bar-plugin',
-            category: 'generic-plugin',
-          });
-        }).not.toThrow();
-        done();
-      });
+      describe('[]', function() {
+        beforeEach(resetRegistry);
 
-      it('Should register multiple plugins specified as an array', function(done) {
-        var instance2;
-        instance2 = pluginRegistry.get('foo');
-        expect(function() {
-          var pluginDefintions = [
-            {
+        it('Should register multiple plugins specified as arguments', function(done) {
+          var instance2;
+          instance2 = pluginRegistry.get('foo');
+          expect(function() {
+            instance2.add({
               requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
               name: 'foo-plugin',
               category: 'generic-plugin',
-            },
-            {
-              requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
-              name: 'bar-plugin',
-              category: 'generic-plugin',
-            }
-          ];
-          instance2.add(pluginDefintions);
-        }).not.toThrow();
-        done();
-      });
-
-      it('Should register multiple plugins fluently', function(done) {
-        expect(function() {
-          pluginRegistry
-            .get('foo')
-            .add({
-              requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
-              name: 'foo-plugin',
-              category: 'generic-plugin',
-            })
-            .add({
+            }, {
               requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
               name: 'bar-plugin',
               category: 'generic-plugin',
             });
-        }).not.toThrow();
-        done();
+          }).not.toThrow();
+          done();
+        });
+
+        it('Should register multiple plugins specified as an array', function(done) {
+          var instance2;
+          instance2 = pluginRegistry.get('foo');
+          expect(function() {
+            var pluginDefintions = [
+              {
+                requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
+                name: 'foo-plugin',
+                category: 'generic-plugin',
+              },
+              {
+                requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
+                name: 'bar-plugin',
+                category: 'generic-plugin',
+              }
+            ];
+            instance2.add(pluginDefintions);
+          }).not.toThrow();
+          done();
+        });
+
+        it('Should register multiple plugins fluently', function(done) {
+          expect(function() {
+            pluginRegistry
+              .get('foo')
+              .add({
+                requirePath: path.resolve(__dirname, '../node_modules/foo-plugin'),
+                name: 'foo-plugin',
+                category: 'generic-plugin',
+              })
+              .add({
+                requirePath: path.resolve(__dirname, '../node_modules/bar-plugin'),
+                name: 'bar-plugin',
+                category: 'generic-plugin',
+              });
+          }).not.toThrow();
+          done();
+        });
       });
+
     });
 
     describe('[plugins in different locations]', function() {

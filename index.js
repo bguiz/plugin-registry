@@ -40,14 +40,33 @@ function parsePluginDefinition(pluginDefinition, context) {
     pathsToTest = [pluginDefinition.requirePath];
   }
   else {
-    var toolPath = (context.toolPath || path.resolve(__dirname, '../..'));
-    var projectPath = (context.projectPath || path.resolve('.'));
+    var toolPath = context.toolPath;
+    if (!toolPath) {
+      // Attempt to determine the path of the file which **first** required
+      // this module, and assume that that is the tool path (only when not specified)
+      var parentPath = module.parent && module.parent.id;
+      if (typeof parentPath === 'string') {
+        toolPath = path.dirname(module.parent.id);
+      }
+      else {
+        toolPath = path.resolve(__dirname, '../..');
+      }
+      context.toolPath = toolPath;
+    }
+
+    var projectPath = context.projectPath;
+    if (!projectPath) {
+      projectPath = path.resolve('.');
+      context.projectPath = projectPath;
+    }
+
     if (!isAbsolutePath(toolPath)) {
       throw new Error('Tool path should be an absolute path');
     }
     if (!isAbsolutePath(projectPath)) {
       throw new Error('Project path should be an absolute path');
     }
+
     pathsToTest = [
       // first, check if this plugin is installed as one of tool's own dependencies
       path.resolve(toolPath, 'node_modules', name),
@@ -81,7 +100,9 @@ function parsePluginDefinition(pluginDefinition, context) {
     throw new Error([
       'Unable to find require path for plugin named '+name+':'
     ]
-      .concat(failedRequirePaths)
+      .concat(failedRequirePaths.map(function(aPath) {
+        return '\t'+aPath;
+      }))
       .join('\n'));
   }
   else if (!isAbsolutePath(requirePath)) {
