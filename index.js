@@ -31,11 +31,15 @@ function parsePluginDefinition(pluginDefinition, context) {
     throw new Error('Plugins should have a category');
   }
 
-  var requirePath = pluginDefinition.requirePath;
-  var plugin;
-
   var failedRequirePaths = [];
-  if (typeof requirePath !== 'string') {
+  var pathsToTest;
+  if (typeof pluginDefinition.requirePath === 'string') {
+    if (!isAbsolutePath(pluginDefinition.requirePath)) {
+      throw new Error('Require path specified should be an absolute path');
+    }
+    pathsToTest = [pluginDefinition.requirePath];
+  }
+  else {
     var toolPath = (context.toolPath || path.resolve(__dirname, '../..'));
     var projectPath = (context.projectPath || path.resolve('.'));
     if (!isAbsolutePath(toolPath)) {
@@ -44,7 +48,7 @@ function parsePluginDefinition(pluginDefinition, context) {
     if (!isAbsolutePath(projectPath)) {
       throw new Error('Project path should be an absolute path');
     }
-    [
+    pathsToTest = [
       // first, check if this plugin is installed as one of tool's own dependencies
       path.resolve(toolPath, 'node_modules', name),
       // if not, check if this plugin is installed in the local project
@@ -52,22 +56,24 @@ function parsePluginDefinition(pluginDefinition, context) {
       // lastly, check if this plugin is installed as a global installation
       // (sibling folder to tool itself)
       path.resolve(toolPath, '..', name)
-    ].forEach(function testPossibleRequirePathForPlugin(pathToTest) {
-      if (!requirePath) {
-        try {
-          plugin = require(pathToTest);
-          // If require of the path did not throw, then we should use this path
-          requirePath = pathToTest;
-          // console.log('Plugin '+name+' will be loaded from ' + requirePath);
-        }
-        catch (e) {
-          // Do nothing
-          // console.log('Plugin '+name+' failed to load from ' + pathToTest);
-          failedRequirePaths.push(pathToTest);
-        }
-      }
-    });
+    ];
   }
+
+  var requirePath;
+  var plugin;
+  pathsToTest.forEach(function testPossibleRequirePathForPlugin(pathToTest) {
+    if (!requirePath) {
+      try {
+        plugin = require(pathToTest);
+        // If require of the path did not throw, then we should use this path
+        requirePath = pathToTest;
+      }
+      catch (e) {
+        // Do nothing
+        failedRequirePaths.push(pathToTest);
+      }
+    }
+  });
 
   // if none of these exist, then the plugin cannot be found
   // fail immediately
