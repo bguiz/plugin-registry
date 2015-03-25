@@ -21,9 +21,6 @@ var pluginRegistry = require('plugin-registry');
 
 pluginRegistry
   .get('my-tool')
-  .context({
-    toolPath: __dirname,
-  })
   .add([
     'my-tool-foo-task',
     'my-tool-bar-task'
@@ -72,7 +69,33 @@ pluginRegistry
   ]);
 ```
 
-### Plugin Definition
+### `context(pluginContext)`
+
+When the tool asks plugin registry to find its plugins by name -
+and not specify an explicit `requirePath`,
+it attempts to infer the location of the plugin from a number of possible locations,
+based on the location of the tool,
+and the location of the project.
+
+The default values for each of these work well in most cases, however,
+they can be explicitly specified too if this is desired.
+
+Note that this method can only be called once -
+it does not make sense for the context to change once set.
+
+#### `toolPath`
+
+- Type: `string` - an **absolute** file path
+- Optional: `true`
+- Default: `path.dirname(module.parent.id)`, if available, otherwise `path.resolve(__dirname, '../..')`
+
+#### `projectPath`
+
+- Type: `string` - an **absolute** file path
+- Optional: `true`
+- Default: `path.resolve('.')` (current working directory)
+
+### `add(pluginDefintion)`
 
 #### `name`
 
@@ -88,7 +111,7 @@ pluginRegistry
 
 #### `requirePath`
 
-- Type: `string`
+- Type: `string` - an **absolute** file path
 - Optional: `true`
 - Default: Determined programmatically based on value of name
   - By looking in the possible following locations:
@@ -96,9 +119,6 @@ pluginRegistry
     - A dependency of the project at the current working directory
     - A sibling folder of the tool using the plugin registry
       - If tool is a global installation, this will pick up other global installations
-- Notes:
-  - If specified, `requirePath` must be an absolute path
-  - Relative paths are not allowed
 
 ### Parsed Plugin Definition
 

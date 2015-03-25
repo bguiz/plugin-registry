@@ -115,6 +115,47 @@ describe('[basic]', function() {
       });
     });
 
+    describe('[add one plugin CWD relative]', function() {
+      var cwdRelativePluginRootPath = path.resolve(__dirname, 'node_modules');
+      var cwdRelativePluginPath = path.resolve(cwdRelativePluginRootPath, 'foo-plugin');
+
+      //TODO replace with `beforeAll` once we get jasmine 2.1
+      beforeEach(function() {
+        helper.createPlugin({
+          requirePath: cwdRelativePluginPath,
+          name: 'foo-plugin',
+          category: 'generic-plugin',
+        });
+      });
+
+      //TODO replace with `afterAll` once we get jasmine 2.1
+      afterEach(function() {
+        helper.cleanUpPlugin({
+          requirePath: cwdRelativePluginRootPath,
+        });
+      });
+
+      describe('[]', function() {
+        beforeEach(resetRegistry);
+
+        it('Should register a single plugin', function(done) {
+          var instance2;
+          instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              // No toolPath
+            });
+          expect(function() {
+            instance2.add({
+              name: 'foo-plugin',
+              category: 'generic-plugin',
+            });
+          }).not.toThrow();
+          done();
+        });
+      });
+    });
+
     describe('[add one plugin]', function() {
       //TODO replace with `beforeAll` once we get jasmine 2.1
       beforeEach(function() {
