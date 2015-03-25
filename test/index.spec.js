@@ -6,13 +6,15 @@ var pluginRegistry = require('../index');
 
 var helper = require('./helper');
 
+function resetRegistry() {
+  pluginRegistry.reset();
+}
+
 describe('[basic]', function() {
   describe('[access]', function() {
-    afterEach(function() {
-      pluginRegistry.reset();
-    });
-
     describe('[registry creation]', function() {
+      beforeEach(resetRegistry);
+
       it('Should create a default registry', function(done) {
         var instance = pluginRegistry.get();
         expect(instance).toBeDefined();
@@ -107,13 +109,15 @@ describe('[basic]', function() {
             category: 'task',
             requirePath: './relative/path',
           });
-        }).toThrowError('Require path should resolve to an absolute path');
+        }).toThrowError('Require path specified should be an absolute path');
 
         done();
       });
     });
 
     describe('[add one plugin]', function() {
+      beforeEach(resetRegistry);
+
       //TODO replace with `beforeAll` once we get jasmine 2.1
       beforeEach(function() {
         helper.createPlugin({
@@ -174,12 +178,14 @@ describe('[basic]', function() {
             name: 'foo-plugin',
             category: 'generic-plugin',
           });
-        }).toThrowError('Require path should resolve to an absolute path');
+        }).toThrowError('Require path specified should be an absolute path');
         done();
       });
     });
 
     describe('[add multiple plugins]', function() {
+      beforeEach(resetRegistry);
+
       //TODO replace with `beforeAll` once we get jasmine 2.1
       beforeEach(function() {
         helper.createPlugin({
@@ -275,17 +281,17 @@ describe('[basic]', function() {
         helper.createPlugin({
           requirePath: toolLocalPath,
           name: 'tool-local-plugin',
-          category: 'generic-plugin',
+          category: 'plugin-type-1',
         });
         helper.createPlugin({
           requirePath: projectLocalPath,
           name: 'project-local-plugin',
-          category: 'generic-plugin',
+          category: 'plugin-type-2',
         });
         helper.createPlugin({
           requirePath: globalPath,
           name: 'global-plugin',
-          category: 'generic-plugin',
+          category: 'plugin-type-2',
         });
       });
 
@@ -303,6 +309,8 @@ describe('[basic]', function() {
       });
 
       describe('[test for files]', function() {
+        beforeEach(resetRegistry);
+
         it('Should test for files in tool local location', function(done) {
           expect(function() {
             pluginRegistry
@@ -381,6 +389,8 @@ describe('[basic]', function() {
       });
 
       describe('[query registry]', function() {
+        beforeEach(resetRegistry);
+
         it('Should clear registry when reset called', function(done) {
           var instance2 = pluginRegistry
             .get('foo')
@@ -463,6 +473,54 @@ describe('[basic]', function() {
           expect(instance2.getAllOfCategory('plugin-type-1').length).toEqual(1);
           expect(instance2.getAllOfCategory('plugin-type-2').length).toEqual(2);
 
+          ['plugin-type-1', 'plugin-type-2']
+            .forEach(function eachPluginCategory(category) {
+              instance2.getAllOfCategory(category)
+                .forEach(function eachPluginDefinition(definition) {
+                  expect(definition.plugin).toBeDefined();
+                  expect(definition.plugin.category).toEqual(category);
+                });
+            });
+
+          done();
+        });
+
+        it('Should get all of one category specified with absolute paths', function(done) {
+          var instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: toolLocalBasePath,
+              projectPath: projectLocalBasePath,
+            })
+            .add({
+              name: 'tool-local-plugin',
+              category: 'plugin-type-1',
+              requirePath: toolLocalPath,
+            })
+            .add({
+              name: 'project-local-plugin',
+              category: 'plugin-type-2',
+              requirePath: projectLocalPath,
+            })
+            .add({
+              name: 'global-plugin',
+              category: 'plugin-type-2',
+              requirePath: globalPath,
+            });
+
+          instance2 = pluginRegistry.get('foo');
+          expect(instance2.getAllOfCategory('plugin-type-1').length).toEqual(1);
+          expect(instance2.getAllOfCategory('plugin-type-2').length).toEqual(2);
+
+          ['plugin-type-1', 'plugin-type-2']
+            .forEach(function eachPluginCategory(category) {
+              instance2.getAllOfCategory(category)
+                .forEach(function eachPluginDefinition(definition) {
+                  expect(definition.plugin).toBeDefined();
+                  expect(definition.plugin.category).toEqual(category);
+                });
+            });
+
           done();
         });
 
@@ -490,6 +548,15 @@ describe('[basic]', function() {
           var registry = instance2.getFullRegistry();
           expect(registry['plugin-type-1'].length).toEqual(1);
           expect(registry['plugin-type-2'].length).toEqual(2);
+
+          ['plugin-type-1', 'plugin-type-2']
+            .forEach(function eachPluginCategory(category) {
+              registry[category]
+                .forEach(function eachPluginDefinition(definition) {
+                  expect(definition.plugin).toBeDefined();
+                  expect(definition.plugin.category).toEqual(category);
+                });
+            });
 
           done();
         });
