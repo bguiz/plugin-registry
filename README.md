@@ -137,6 +137,12 @@ The plugin **must**, of course, be valid Javascript or JSON,
 as per NodeJs' and CommonJs' specifications,
 in order for this to work.
 
+## Contributing
+
+This repository uses the **git flow** branching strategy.
+If you wish to contribute, please branch from the **develop** branch -
+pull requests will only be requested if they request merging into the develop branch.
+
 ## Author
 
 Maintained by Brendan Graetz
