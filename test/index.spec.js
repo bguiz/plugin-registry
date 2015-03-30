@@ -73,11 +73,15 @@ describe('[basic]', function() {
         var instance2;
         instance2 = pluginRegistry.get('foo');
         expect(function() {
+          instance2.context();
+        }).toThrowError('Invalid context');
+        expect(function() {
           instance2.context({ myOption: 123 });
         }).not.toThrow();
         expect(function() {
           instance2.context({ myOption: 456 });
         }).toThrowError('Can only set context once for registry foo');
+        expect(instance2.getContext()).toEqual({ myOption: 123 });
         done();
       });
 
@@ -151,6 +155,54 @@ describe('[basic]', function() {
               category: 'generic-plugin',
             });
           }).not.toThrow();
+          done();
+        });
+
+        it('Should ensure that toolPath is valid', function(done) {
+          var instance2;
+          instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: '/tmp',
+              projectPath: '../node_modules',
+            });
+          expect(function() {
+            instance2.add('foo-plugin');
+          }).toThrowError('Project path should be an absolute path');
+          done();
+        });
+
+        it('Should ensure that projectPath is valid', function(done) {
+          var instance2;
+          instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: '../node_modules',
+              projectPath: '/tmp',
+            });
+          expect(function() {
+            instance2.add('foo-plugin');
+          }).toThrowError('Tool path should be an absolute path');
+          done();
+        });
+
+        it('Should ensure that plugin name is valid', function(done) {
+          var instance2;
+          instance2 = pluginRegistry
+            .get('foo')
+            .context({
+              toolPath: '/tmp/plugin-registry-tool-path',
+              projectPath: '/tmp/plugin-registry-project-path',
+            });
+          var expectedErrorMessage = [
+            'Unable to find require path for plugin named foo-plugin:',
+            '\t/tmp/plugin-registry-tool-path/node_modules/foo-plugin',
+            '\t/tmp/plugin-registry-project-path/node_modules/foo-plugin',
+            '\t/tmp/foo-plugin'
+          ].join('\n');
+          expect(function() {
+            instance2.add('foo-plugin');
+          }).toThrowError(expectedErrorMessage);
           done();
         });
       });
