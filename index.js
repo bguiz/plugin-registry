@@ -45,6 +45,8 @@ function parsePluginDefinition(pluginDefinition, context) {
       // Attempt to determine the path of the file which **first** required
       // this module, and assume that that is the tool path (only when not specified)
       var parentPath = module.parent && module.parent.id;
+      /* istanbul ignore else :
+        This is not possible to test in jasmine, as the spec file needs to require this file */
       if (typeof parentPath === 'string') {
         toolPath = path.dirname(module.parent.id);
       }
@@ -105,6 +107,10 @@ function parsePluginDefinition(pluginDefinition, context) {
       }))
       .join('\n'));
   }
+  /* istanbul ignore if :
+     This code path should not be possible to hit due to comprehensive
+     validation earlier in this function of toolPath and projectPath
+     However, for for correctness reasons, this check is still included */
   else if (!isAbsolutePath(requirePath)) {
     throw new Error('Require path should resolve to an absolute path');
   }
