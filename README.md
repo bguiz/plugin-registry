@@ -5,6 +5,7 @@ Maintain a flexible and composable registry of plugins for your project.
 [![NPM](https://nodei.co/npm/plugin-registry.png)](https://github.com/bguiz/plugin-registry/)
 
 [![Build Status](https://travis-ci.org/bguiz/plugin-registry.svg?branch=master)](https://travis-ci.org/bguiz/plugin-registry)
+[![Coverage Status](https://coveralls.io/repos/bguiz/plugin-registry/badge.svg?branch=master)](https://coveralls.io/r/bguiz/plugin-registry?branch=master)
 
 ## Usage
 
@@ -135,6 +136,12 @@ The `require()`d plugin.
 The plugin **must**, of course, be valid Javascript or JSON,
 as per NodeJs' and CommonJs' specifications,
 in order for this to work.
+
+## Contributing
+
+This repository uses the **git flow** branching strategy.
+If you wish to contribute, please branch from the **develop** branch -
+pull requests will only be requested if they request merging into the develop branch.
 
 ## Author
 
