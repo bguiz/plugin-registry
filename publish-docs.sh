@@ -31,7 +31,8 @@ if test "${NUM_FILES_CHANGED}" -gt "0" ; then
   COMMIT_MESSAGE="Documentation CI publish ${TIME_STAMP} ${COMMIT_ID}"
   echo "${COMMIT_MESSAGE}"
   git commit -m "${COMMIT_MESSAGE}"
-  git push upstream HEAD:gh-pages
+  # grepp invert to filter out git remote URL, since that contains the access token
+  git push upstream HEAD:gh-pages | grep -v "github\.com"
 
 else
 
