@@ -13,7 +13,7 @@ git init
 git config user.name "${GIT_USER}"
 git config user.email "${GIT_EMAIL}"
 git remote add upstream "https://${GH_TOKEN}@github.com/${GH_USER}/${GH_REPO}.git"
-git fetch upstream
+git fetch upstream gh-pages
 git reset upstream/gh-pages
 
 # Add any files needed manually
