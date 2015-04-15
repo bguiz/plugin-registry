@@ -2,7 +2,7 @@
     "project": {
         "name": "qryq",
         "description": "Maintains a general purpose registry of plugins",
-        "version": "0.1.5"
+        "version": "0.2.0"
     },
     "files": {
         "index.js": {
