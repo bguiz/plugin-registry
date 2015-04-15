@@ -20,11 +20,21 @@ git reset upstream/gh-pages
 #echo "${GH_USER}.github.io/" > CNAME
 touch .
 
-# Commit and push
-git add -A .
-COMMIT_ID=$( git rev-parse --short HEAD )
-TIME_STAMP=$( date +%Y-%m-%d:%H:%M:%S )
-COMMIT_MESSAGE="Documentation CI publish ${TIME_STAMP} ${COMMIT_ID}"
-echo "${COMMIT_MESSAGE}"
-git commit -m "${COMMIT_MESSAGE}"
-git push upstream HEAD:gh-pages
+# Test if there are any changes
+NUM_FILES_CHANGED=$( git ls-files -m | wc -l )
+if test "${NUM_FILES_CHANGED}" -gt "0" ; then
+
+  # Commit and push
+  git add -A .
+  COMMIT_ID=$( git rev-parse --short HEAD )
+  TIME_STAMP=$( date +%Y-%m-%d:%H:%M:%S )
+  COMMIT_MESSAGE="Documentation CI publish ${TIME_STAMP} ${COMMIT_ID}"
+  echo "${COMMIT_MESSAGE}"
+  git commit -m "${COMMIT_MESSAGE}"
+  git push upstream HEAD:gh-pages
+
+else
+
+  echo "Documentation unchanged, no need to publish"
+
+fi
