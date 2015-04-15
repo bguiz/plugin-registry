@@ -24,4 +24,4 @@ env:
   - GH_REPO: plugin-registry
   - GIT_USER: Travis CI Git User
   - GIT_EMAIL: travis.ci.git.user@bguiz.com
-  - DOCUMENT_BRANCH: feature/yuidoc
+  - DOCUMENT_BRANCH: master
