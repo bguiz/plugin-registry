@@ -36,7 +36,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "index.js",
-            "line": 162
+            "line": 165
         }
     },
     "classes": {
@@ -64,19 +64,21 @@
             "module": "PluginRegistry",
             "namespace": "",
             "file": "index.js",
-            "line": 162
+            "line": 165,
+            "description": "A fluent interface for interacting with a plugin registry"
         }
     },
     "classitems": [
         {
             "file": "index.js",
             "line": 135,
+            "description": "Gets a registry with a specified name.\nIf one with this name does not exist, a new one is created (multiton pattern).",
             "itemtype": "method",
             "name": "get",
             "params": [
                 {
                     "name": "registryName",
-                    "description": "",
+                    "description": "**optional**",
                     "type": "String"
                 }
             ],
@@ -89,7 +91,8 @@
         },
         {
             "file": "index.js",
-            "line": 174,
+            "line": 179,
+            "description": "Sets the context used by this plugin registry.\nMay only be called once.",
             "itemtype": "method",
             "name": "setContext",
             "chainable": 1,
@@ -105,7 +108,8 @@
         },
         {
             "file": "index.js",
-            "line": 193,
+            "line": 201,
+            "description": "Add one or more plugins to this registry",
             "itemtype": "method",
             "name": "addPlugins",
             "chainable": 1,
@@ -122,7 +126,7 @@
         },
         {
             "file": "index.js",
-            "line": 209,
+            "line": 219,
             "itemtype": "method",
             "name": "addPluginImpl",
             "params": [
@@ -139,7 +143,8 @@
         },
         {
             "file": "index.js",
-            "line": 228,
+            "line": 238,
+            "description": "Returns all plugins of a particular category,\nor an empty array for a non-existent category.",
             "itemtype": "method",
             "name": "getAllPluginsOfCategory",
             "chainable": 1,
@@ -155,7 +160,8 @@
         },
         {
             "file": "index.js",
-            "line": 238,
+            "line": 251,
+            "description": "Gets the entire plugin registry",
             "itemtype": "method",
             "name": "getFullPluginRegistry",
             "class": "PluginRegistryFluentInterface",
@@ -163,7 +169,8 @@
         },
         {
             "file": "index.js",
-            "line": 246,
+            "line": 261,
+            "description": "Gets the context used by this plugin registry.",
             "itemtype": "method",
             "name": "getContext",
             "class": "PluginRegistryFluentInterface",
@@ -171,7 +178,8 @@
         },
         {
             "file": "index.js",
-            "line": 259,
+            "line": 276,
+            "description": "Forgets all registries and their plugins",
             "itemtype": "method",
             "name": "reset",
             "class": "PluginRegistry",
