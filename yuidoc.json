@@ -1,5 +1,4 @@
 {
-  "name": "qryq",
   "options": {
     "exclude": "coverage,documentation,node_modules,test",
     "paths": "**/*.js",

@@ -13,11 +13,38 @@ var DEFAULT_REGISTRY_NAME = 'DEFAULT_REGISTRY';
  * @class  PluginRegistry
  */
 
+/**
+ * isAbsolutePath is necessary because `path.isAbsolute()` is not available on NodeJs 0.10.x
+ *
+ * @method  isAbsolutePath
+ * @param  pathToTest {String}
+ * @return {Boolean} true is pathToTest is absolute
+ * @private
+ */
 function isAbsolutePath(pathToTest) {
-  //NOTE `path.isAbsolute()` is not available on NodeJs 0.10.x
   return (path.resolve(pathToTest) === path.normalize(pathToTest));
 }
 
+/**
+ * This is the core functionality of this package.
+ *
+ * If `pluginDefinition` is a string, a plugin with this as the name is assumed.
+ *
+ * Otherwise, `pluginDefinition` should be an object, with a `name` property.
+ * This may also specify an optional `requirePath` property,
+ * which must be an absolute path.
+ * Otherwise, this guesses the `requirePath` by looking at the following possible locations:
+ *
+ * - Tool's own dependencies
+ * - Project's own dependencies
+ * - Sibling of tool (at folder level) --> This is useful when tool is installed globally
+ *
+ * @method  parsePluginDefinition
+ * @param  pluginDefinition {String|Object}
+ * @param  context {Object}
+ * @return {PluginDefinition}
+ * @private
+ */
 function parsePluginDefinition(pluginDefinition, context) {
   if (typeof pluginDefinition === 'string') {
     pluginDefinition = {
