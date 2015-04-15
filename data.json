@@ -1,0 +1,182 @@
+{
+    "project": {
+        "name": "qryq",
+        "description": "Maintains a general purpose registry of plugins",
+        "version": "0.1.5"
+    },
+    "files": {
+        "index.js": {
+            "name": "index.js",
+            "modules": {
+                "PluginRegistry": 1
+            },
+            "classes": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "fors": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "PluginRegistry": {
+            "name": "PluginRegistry",
+            "submodules": {},
+            "classes": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "fors": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "namespaces": {},
+            "tag": "module",
+            "file": "index.js",
+            "line": 162
+        }
+    },
+    "classes": {
+        "PluginRegistry": {
+            "name": "PluginRegistry",
+            "shortname": "PluginRegistry",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "PluginRegistry",
+            "namespace": "",
+            "file": "index.js",
+            "line": 12
+        },
+        "PluginRegistryFluentInterface": {
+            "name": "PluginRegistryFluentInterface",
+            "shortname": "PluginRegistryFluentInterface",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "PluginRegistry",
+            "namespace": "",
+            "file": "index.js",
+            "line": 162
+        }
+    },
+    "classitems": [
+        {
+            "file": "index.js",
+            "line": 135,
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "registryName",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "PluginRegistryFluentInterface"
+            },
+            "class": "PluginRegistry",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 174,
+            "itemtype": "method",
+            "name": "setContext",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "newContext",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 193,
+            "itemtype": "method",
+            "name": "addPlugins",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "plugins",
+                    "description": "",
+                    "type": "String|PluginDefinition",
+                    "multiple": true
+                }
+            ],
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 209,
+            "itemtype": "method",
+            "name": "addPluginImpl",
+            "params": [
+                {
+                    "name": "pluginDefinition",
+                    "description": "",
+                    "type": "String|PluginDefinition"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 228,
+            "itemtype": "method",
+            "name": "getAllPluginsOfCategory",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "category",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 238,
+            "itemtype": "method",
+            "name": "getFullPluginRegistry",
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 246,
+            "itemtype": "method",
+            "name": "getContext",
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 259,
+            "itemtype": "method",
+            "name": "reset",
+            "class": "PluginRegistry",
+            "module": "PluginRegistry"
+        }
+    ],
+    "warnings": []
+}
