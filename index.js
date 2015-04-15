@@ -133,9 +133,12 @@ function parsePluginDefinition(pluginDefinition, context) {
 var registries = {};
 
 /**
+ * Gets a registry with a specified name.
+ * If one with this name does not exist, a new one is created (multiton pattern).
+ *
  * @method get
  * @for  PluginRegistry
- * @param  registryName {String}
+ * @param  registryName {String} **optional**
  * @return {PluginRegistryFluentInterface}
  */
 function get(registryName) {
@@ -160,6 +163,8 @@ function get(registryName) {
   // cache it, then return it
 
   /**
+   * A fluent interface for interacting with a plugin registry
+   *
    * @class PluginRegistryFluentInterface
    */
   fluent = {
@@ -172,6 +177,9 @@ function get(registryName) {
   };
 
   /**
+   * Sets the context used by this plugin registry.
+   * May only be called once.
+   *
    * @method setContext
    * @for  PluginRegistryFluentInterface
    * @chainable
@@ -191,6 +199,8 @@ function get(registryName) {
   }
 
   /**
+   * Add one or more plugins to this registry
+   *
    * @method addPlugins
    * @for  PluginRegistryFluentInterface
    * @chainable
@@ -226,6 +236,9 @@ function get(registryName) {
   }
 
   /**
+   * Returns all plugins of a particular category,
+   * or an empty array for a non-existent category.
+   *
    * @method getAllPluginsOfCategory
    * @for  PluginRegistryFluentInterface
    * @chainable
@@ -236,6 +249,8 @@ function get(registryName) {
   }
 
   /**
+   * Gets the entire plugin registry
+   *
    * @method getFullPluginRegistry
    * @for  PluginRegistryFluentInterface
    */
@@ -244,6 +259,8 @@ function get(registryName) {
   }
 
   /**
+   * Gets the context used by this plugin registry.
+   *
    * @method getContext
    * @for  PluginRegistryFluentInterface
    */
@@ -257,6 +274,8 @@ function get(registryName) {
 }
 
 /**
+ * Forgets all registries and their plugins
+ *
  * @method reset
  * @for  PluginRegistry
  */
