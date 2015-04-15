@@ -19,7 +19,7 @@ after_success:
     npm run publishdocs
 env:
   global:
-  - secure: K/HNcyYwuAiTY+hLprjFCUkGDor5q5raVdZ32c1R4bwdpFvz9bqStic5CERXhXRguQZO0b2xCEF63njsuYVIX+wGx8nQd9dwRIYgbDjZiw3+X2I02THXs/Q0Q7b3PZlWhrXO33axn3zBLXWZmJK52RSCq8jkwy4dQVU9vPKyGbY=
+  - secure: dsXQADywfJOlPsJe2EHPQBu6OrJRzov36A354yDacSOK7h8wvqUA+PtybKldg+CnhjXJ6imN6GXyTYEwg7Wsr01b579z/tj2D5XpXxurnJP0Y0Av/QRsHhtpbsyogqltg5zO9KFK3O2NBq9f+Yjeh8Op1WU06b0WNz8i5i77MTA=
   - GH_USER: bguiz
   - GH_REPO: plugin-registry
   - GIT_USER: Travis CI Git User
