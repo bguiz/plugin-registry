@@ -13,7 +13,7 @@ after_success:
 - npm run coveralls
 - |
     test ${TRAVIS_PULL_REQUEST} == "false" && \
-    test ${TRAVIS_BRANCH} == "feature/yuidoc" && \
+    test ${TRAVIS_BRANCH} == "${DOCUMENT_BRANCH}" && \
     test "${TRAVIS_BUILD_NUMBER}.1" == "${TRAVIS_JOB_NUMBER}" && \
     npm run document && \
     npm run publishdocs
@@ -24,3 +24,4 @@ env:
   - GH_REPO: plugin-registry
   - GIT_USER: Travis CI Git User
   - GIT_EMAIL: travis.ci.git.user@bguiz.com
+  - DOCUMENT_BRANCH: feature/yuidoc
