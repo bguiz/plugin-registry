@@ -14,7 +14,7 @@ after_success:
 - |
     test ${TRAVIS_PULL_REQUEST} == "false" && \
     test ${TRAVIS_BRANCH} == "feature/yuidoc" && \
-    test "${TRAVIS_BUILD_NUMBER}.1" === "${TRAVIS_JOB_NUMBER}" && \
+    test "${TRAVIS_BUILD_NUMBER}.1" == "${TRAVIS_JOB_NUMBER}" && \
     npm run document && \
     npm run publishdocs
 env:
