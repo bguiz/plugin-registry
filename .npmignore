@@ -3,3 +3,4 @@
 /documentation
 /.coveralls.yml
 *.backup
+/test

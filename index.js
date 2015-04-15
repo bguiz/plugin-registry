@@ -5,6 +5,14 @@ var path = require('path');
 var DEFAULT_PLUGIN_CATEGORY = 'task';
 var DEFAULT_REGISTRY_NAME = 'DEFAULT_REGISTRY';
 
+/**
+ * @module  PluginRegistry
+ */
+
+/**
+ * @class  PluginRegistry
+ */
+
 function isAbsolutePath(pathToTest) {
   //NOTE `path.isAbsolute()` is not available on NodeJs 0.10.x
   return (path.resolve(pathToTest) === path.normalize(pathToTest));
@@ -124,6 +132,15 @@ function parsePluginDefinition(pluginDefinition, context) {
 
 var registries = {};
 
+/**
+ * Gets a registry with a specified name.
+ * If one with this name does not exist, a new one is created (multiton pattern).
+ *
+ * @method get
+ * @for  PluginRegistry
+ * @param  registryName {String} **optional**
+ * @return {PluginRegistryFluentInterface}
+ */
 function get(registryName) {
   var context = {};
   var contextHasBeenSet = false;
@@ -144,11 +161,31 @@ function get(registryName) {
 
   // Otherwise create a new registry with a fluent interface,
   // cache it, then return it
+
+  /**
+   * A fluent interface for interacting with a plugin registry
+   *
+   * @class PluginRegistryFluentInterface
+   */
   fluent = {
     registry: {},
+    context: setContext,
+    add: addPlugins,
+    getAllOfCategory: getAllPluginsOfCategory,
+    getFullRegistry: getFullPluginRegistry,
+    getContext: getContext,
   };
 
-  fluent.context = function setContext(newContext) {
+  /**
+   * Sets the context used by this plugin registry.
+   * May only be called once.
+   *
+   * @method setContext
+   * @for  PluginRegistryFluentInterface
+   * @chainable
+   * @param newContext {Object}
+   */
+  function setContext(newContext) {
     if (!newContext) {
       throw new Error('Invalid context');
     }
@@ -159,9 +196,17 @@ function get(registryName) {
     contextHasBeenSet = true;
 
     return fluent;
-  };
+  }
 
-  fluent.add = function addPlugins() {
+  /**
+   * Add one or more plugins to this registry
+   *
+   * @method addPlugins
+   * @for  PluginRegistryFluentInterface
+   * @chainable
+   * @param ...plugins {String|PluginDefinition}
+   */
+  function addPlugins() {
     var argumentsAsArray = Array.prototype.slice.apply(arguments);
     var pluginDefinitions = [];
     argumentsAsArray.forEach(function(argument) {
@@ -169,8 +214,14 @@ function get(registryName) {
     });
     pluginDefinitions.forEach(addPluginImpl);
     return fluent;
-  };
+  }
 
+  /**
+   * @method addPluginImpl
+   * @for  PluginRegistryFluentInterface
+   * @param pluginDefinition {String|PluginDefinition}
+   * @private
+   */
   function addPluginImpl(pluginDefinition) {
     var parsedDefinition = parsePluginDefinition(pluginDefinition, context);
 
@@ -184,23 +235,50 @@ function get(registryName) {
     registryCategory.push(parsedDefinition);
   }
 
-  fluent.getAllOfCategory = function getAllPluginsOfCategory(category) {
+  /**
+   * Returns all plugins of a particular category,
+   * or an empty array for a non-existent category.
+   *
+   * @method getAllPluginsOfCategory
+   * @for  PluginRegistryFluentInterface
+   * @chainable
+   * @param category {String}
+   */
+  function getAllPluginsOfCategory(category) {
     return (fluent.registry[category] || []);
-  };
+  }
 
-  fluent.getFullRegistry = function getFullPluginRegistry() {
+  /**
+   * Gets the entire plugin registry
+   *
+   * @method getFullPluginRegistry
+   * @for  PluginRegistryFluentInterface
+   */
+  function getFullPluginRegistry() {
     return fluent.registry;
-  };
+  }
 
-  fluent.getContext = function getContext() {
+  /**
+   * Gets the context used by this plugin registry.
+   *
+   * @method getContext
+   * @for  PluginRegistryFluentInterface
+   */
+  function getContext() {
     return context;
-  };
+  }
 
   registries[registryName] = fluent;
 
   return fluent;
 }
 
+/**
+ * Forgets all registries and their plugins
+ *
+ * @method reset
+ * @for  PluginRegistry
+ */
 function reset() {
   registries = {};
 }
