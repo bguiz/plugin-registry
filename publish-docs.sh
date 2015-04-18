@@ -5,19 +5,6 @@
 # Stop executing when any errors occur, or when any environment variables that have not been defined are encountered
 set -o errexit -o nounset
 
-test ${TRAVIS_PULL_REQUEST} == "false" && \
-  test ${TRAVIS_BRANCH} == "${DOCUMENT_BRANCH}" && \
-  test "${TRAVIS_BUILD_NUMBER}.1" == "${TRAVIS_JOB_NUMBER}"
-SHOULD_PUBLISH=$?
-
-if test ${SHOULD_PUBLISH} -eq 0 ; then
-  echo "Will publish this build"
-  npm run document
-  publish_github_pages
-else
-  echo "Not publishing this build"
-fi
-
 # Publish documentation to gh-pages
 publish_github_pages() {
   # Set up new git repo in documentation folder, and use gh-pages branch
@@ -53,3 +40,16 @@ publish_github_pages() {
 
   fi
 }
+
+test ${TRAVIS_PULL_REQUEST} == "false" && \
+  test ${TRAVIS_BRANCH} == "${DOCUMENT_BRANCH}" && \
+  test "${TRAVIS_BUILD_NUMBER}.1" == "${TRAVIS_JOB_NUMBER}"
+SHOULD_PUBLISH=$?
+
+if test ${SHOULD_PUBLISH} -eq 0 ; then
+  echo "Will publish this build"
+  npm run document
+  publish_github_pages
+else
+  echo "Not publishing this build"
+fi
