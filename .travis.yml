@@ -11,12 +11,7 @@ script:
 - npm run cover
 after_success:
 - npm run coveralls
-- |
-    test ${TRAVIS_PULL_REQUEST} == "false" && \
-    test ${TRAVIS_BRANCH} == "${DOCUMENT_BRANCH}" && \
-    test "${TRAVIS_BUILD_NUMBER}.1" == "${TRAVIS_JOB_NUMBER}" && \
-    npm run document && \
-    npm run publishdocs
+- npm run publishdocs
 env:
   global:
   - secure: dsXQADywfJOlPsJe2EHPQBu6OrJRzov36A354yDacSOK7h8wvqUA+PtybKldg+CnhjXJ6imN6GXyTYEwg7Wsr01b579z/tj2D5XpXxurnJP0Y0Av/QRsHhtpbsyogqltg5zO9KFK3O2NBq9f+Yjeh8Op1WU06b0WNz8i5i77MTA=
