@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.4</b>
+                    API Docs for Version: <b>0.2.6</b>
                 </p>
             </li>
         </div>
@@ -285,6 +285,18 @@
                           /**
                            * Sets the context used by this plugin registry.
                            * May only be called once.
+                           *
+                           * When the tool asks plugin registry to find its plugins by name -
+                           * and not specify an explicit &#x60;requirePath&#x60;,
+                           * it attempts to infer the location of the plugin from a number of possible locations,
+                           * based on the location of the tool,
+                           * and the location of the project.
+                           *
+                           * The default values for each of these work well in most cases, however,
+                           * they can be explicitly specified too if this is desired.
+                           *
+                           * Note that this method can only be called once -
+                           * it does not make sense for the context to change once set.
                            *
                            * @method setContext
                            * @for  PluginRegistryFluentInterface

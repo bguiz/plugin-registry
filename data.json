@@ -2,7 +2,7 @@
     "project": {
         "name": "plugin-registry",
         "description": "Maintains a general purpose registry of plugins",
-        "version": "0.2.4"
+        "version": "0.2.6"
     },
     "files": {
         "index.js": {
@@ -141,7 +141,7 @@
         {
             "file": "index.js",
             "line": 206,
-            "description": "Sets the context used by this plugin registry.\nMay only be called once.",
+            "description": "Sets the context used by this plugin registry.\nMay only be called once.\n\nWhen the tool asks plugin registry to find its plugins by name -\nand not specify an explicit `requirePath`,\nit attempts to infer the location of the plugin from a number of possible locations,\nbased on the location of the tool,\nand the location of the project.\n\nThe default values for each of these work well in most cases, however,\nthey can be explicitly specified too if this is desired.\n\nNote that this method can only be called once -\nit does not make sense for the context to change once set.",
             "itemtype": "method",
             "name": "setContext",
             "chainable": 1,
@@ -157,7 +157,7 @@
         },
         {
             "file": "index.js",
-            "line": 228,
+            "line": 240,
             "description": "Add one or more plugins to this registry",
             "itemtype": "method",
             "name": "addPlugins",
@@ -175,7 +175,7 @@
         },
         {
             "file": "index.js",
-            "line": 246,
+            "line": 258,
             "itemtype": "method",
             "name": "addPluginImpl",
             "params": [
@@ -192,7 +192,7 @@
         },
         {
             "file": "index.js",
-            "line": 265,
+            "line": 277,
             "description": "Returns all plugins of a particular category,\nor an empty array for a non-existent category.",
             "itemtype": "method",
             "name": "getAllPluginsOfCategory",
@@ -209,7 +209,7 @@
         },
         {
             "file": "index.js",
-            "line": 278,
+            "line": 290,
             "description": "Gets the entire plugin registry",
             "itemtype": "method",
             "name": "getFullPluginRegistry",
@@ -218,7 +218,7 @@
         },
         {
             "file": "index.js",
-            "line": 288,
+            "line": 300,
             "description": "Gets the context used by this plugin registry.",
             "itemtype": "method",
             "name": "getContext",
@@ -227,7 +227,7 @@
         },
         {
             "file": "index.js",
-            "line": 303,
+            "line": 315,
             "description": "Forgets all registries and their plugins",
             "itemtype": "method",
             "name": "reset",
