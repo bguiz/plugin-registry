@@ -83,7 +83,7 @@ function parsePluginDefinition(pluginDefinition, context) {
       /* istanbul ignore else :
         This is not possible to test in jasmine, as the spec file needs to require this file */
       if (typeof parentPath === 'string') {
-        toolPath = path.dirname(module.parent.id);
+        toolPath = path.dirname(parentPath);
       }
       else {
         toolPath = path.resolve(__dirname, '../..');
