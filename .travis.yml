@@ -14,4 +14,5 @@ after_success:
 env:
   global:
   - secure: dsXQADywfJOlPsJe2EHPQBu6OrJRzov36A354yDacSOK7h8wvqUA+PtybKldg+CnhjXJ6imN6GXyTYEwg7Wsr01b579z/tj2D5XpXxurnJP0Y0Av/QRsHhtpbsyogqltg5zO9KFK3O2NBq9f+Yjeh8Op1WU06b0WNz8i5i77MTA=
+  - DOCUMENT_BRANCH: ${TRAVIS_BRANCH}
   - FLAG_CLEAN_DOCUMENT: 'true'
