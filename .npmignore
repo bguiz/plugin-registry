@@ -1,6 +1,7 @@
 /node_modules
 /coverage
 /documentation
+/autodocs
 /.coveralls.yml
 *.backup
 /test
