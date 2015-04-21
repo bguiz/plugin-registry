@@ -1,6 +1,6 @@
 {
   "name": "plugin-registry",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Maintains a general purpose registry of plugins",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/bguiz/plugin-registry",
   "devDependencies": {
-    "autodocs": "^0.0.2",
+    "autodocs": "^0.1.0",
     "coveralls": "^2.11.2",
     "istanbul": "^0.3.11",
     "jasmine-node": "^2.0.0",
