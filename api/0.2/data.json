@@ -2,7 +2,7 @@
     "project": {
         "name": "plugin-registry",
         "description": "Maintains a general purpose registry of plugins",
-        "version": "0.2.7"
+        "version": "0.2.8"
     },
     "files": {
         "index.js": {
