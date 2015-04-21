@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>PluginRegistry - plugin-registry</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            plugin-registry
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.3.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/PluginRegistry", "classes/PluginRegistryFluentInterface", "modules/PluginRegistry"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/PluginRegistry.html">PluginRegistry</a></li>
+	                    <li><a href="../classes/PluginRegistryFluentInterface.html">PluginRegistryFluentInterface</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>PluginRegistry</h1>
+                        </div>
+                        
+                        
+                        
+                        	<div class="well well-small">
+                                    Module: <a href="../modules/PluginRegistry.html">PluginRegistry</a>
+                            </div>
+                        
+                        
+                        
+                        
+                        <!-- table of contents -->
+                        
+                        <div id="class-toc" class="page-section">
+                        	<h2>Table of Contents</h2>
+                            <ul>
+                        		<li>
+                        			<strong>Methods</strong>
+                        			<ul>
+                        				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">registryName</span>)</a></li>
+                        				<li><a href="#method-isAbsolutePath"><span class="im">isAbsolutePath</span>(<span class="ia">pathToTest</span>)</a></li>
+                        				<li><a href="#method-parsePluginDefinition"><span class="im">parsePluginDefinition</span>(<span class="ia">pluginDefinition</span><span class="ia">context</span>)</a></li>
+                        				<li><a href="#method-reset"><span class="im">reset</span>()</a></li>
+                        			</ul>
+                        		</li>
+                        
+                        
+                        
+                        	</ul>
+                        </div>
+                        
+                        <!-- details -->
+                        
+                        
+                            <div id="methods" class="page-section">
+                                <h2 class="off-left">Methods</h2>
+                                <div class="item-list">
+                                    <div id="method-get" class="method item">
+                                    	<div class="method-signature">
+                                    	<span class="name"><code>get</code></span>
+                                    
+                                    		<div class="args">
+                                    			<span class="paren">(</span><ul class="args-list inline commas">
+                                    				<li class="arg">
+                                    						<code>registryName</code>
+                                    				</li>
+                                    			</ul><span class="paren">)</span>
+                                    		</div>
+                                    		<span class="returns-inline">
+                                    			<span class="type"><a href="../classes/PluginRegistryFluentInterface.html" class="crosslink">PluginRegistryFluentInterface</a></span>
+                                    		</span>
+                                    	</div>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    	<div class="meta">
+                                    				<p>
+                                    				Defined in
+                                    		<a href="../files/index.js.html#l162"><code>index.js:162</code></a>
+                                    		</p>
+                                    
+                                    
+                                    
+                                    	</div>
+                                    
+                                    	<div class="description"><p>Gets a registry with a specified name.
+                                    If one with this name does not exist, a new one is created (multiton pattern).</p>
+                                    </div>
+                                    
+                                    		<div class="params">
+                                    			<h4>Parameters:</h4>
+                                    
+                                    			<ul class="params-list">
+                                    				<li class="param">
+                                    						<code class="param-name">registryName</code>
+                                    						<span class="type">String</span>
+                                    
+                                    
+                                    					<div class="param-description"><p><strong>optional</strong></p>
+                                    </div>
+                                    
+                                    				</li>
+                                    			</ul>
+                                    		</div>
+                                    
+                                    		<div class="returns">
+                                    			<h4>Returns:</h4>
+                                    
+                                    			<div class="returns-description">
+                                    						<span class="type"><a href="../classes/PluginRegistryFluentInterface.html" class="crosslink">PluginRegistryFluentInterface</a></span>
+                                    			</div>
+                                    		</div>
+                                    
+                                    </div>
+                                    <div id="method-isAbsolutePath" class="method item private">
+                                    	<div class="method-signature">
+                                    	<span class="name"><code>isAbsolutePath</code></span>
+                                    
+                                    		<div class="args">
+                                    			<span class="paren">(</span><ul class="args-list inline commas">
+                                    				<li class="arg">
+                                    						<code>pathToTest</code>
+                                    				</li>
+                                    			</ul><span class="paren">)</span>
+                                    		</div>
+                                    		<span class="returns-inline">
+                                    			<span class="type">Boolean</span>
+                                    		</span>
+                                    	</div>
+                                    
+                                    
+                                    		<span class="flag private">private</span>
+                                    
+                                    
+                                    
+                                    
+                                    	<div class="meta">
+                                    				<p>
+                                    				Defined in
+                                    		<a href="../files/index.js.html#l16"><code>index.js:16</code></a>
+                                    		</p>
+                                    
+                                    
+                                    
+                                    	</div>
+                                    
+                                    	<div class="description"><p>isAbsolutePath is necessary because <code>path.isAbsolute()</code> is not available on NodeJs 0.10.x</p>
+                                    </div>
+                                    
+                                    		<div class="params">
+                                    			<h4>Parameters:</h4>
+                                    
+                                    			<ul class="params-list">
+                                    				<li class="param">
+                                    						<code class="param-name">pathToTest</code>
+                                    						<span class="type">String</span>
+                                    
+                                    
+                                    
+                                    				</li>
+                                    			</ul>
+                                    		</div>
+                                    
+                                    		<div class="returns">
+                                    			<h4>Returns:</h4>
+                                    
+                                    			<div class="returns-description">
+                                    						<span class="type">Boolean</span>:
+                                    					<p>true is pathToTest is absolute</p>
+                                    
+                                    			</div>
+                                    		</div>
+                                    
+                                    </div>
+                                    <div id="method-parsePluginDefinition" class="method item private">
+                                    	<div class="method-signature">
+                                    	<span class="name"><code>parsePluginDefinition</code></span>
+                                    
+                                    		<div class="args">
+                                    			<span class="paren">(</span><ul class="args-list inline commas">
+                                    				<li class="arg">
+                                    						<code>pluginDefinition</code>
+                                    				</li>
+                                    				<li class="arg">
+                                    						<code>context</code>
+                                    				</li>
+                                    			</ul><span class="paren">)</span>
+                                    		</div>
+                                    		<span class="returns-inline">
+                                    			<span class="type">PluginDefinition</span>
+                                    		</span>
+                                    	</div>
+                                    
+                                    
+                                    		<span class="flag private">private</span>
+                                    
+                                    
+                                    
+                                    
+                                    	<div class="meta">
+                                    				<p>
+                                    				Defined in
+                                    		<a href="../files/index.js.html#l28"><code>index.js:28</code></a>
+                                    		</p>
+                                    
+                                    
+                                    
+                                    	</div>
+                                    
+                                    	<div class="description"><p>This is the core functionality of this package.</p>
+                                    <p>If <code>pluginDefinition</code> is a string, a plugin with this as the name is assumed.</p>
+                                    <p>Otherwise, <code>pluginDefinition</code> should be an object, with a <code>name</code> property.
+                                    This may also specify an optional <code>requirePath</code> property,
+                                    which must be an absolute path.
+                                    Otherwise, this guesses the <code>requirePath</code> by looking at the following possible locations:</p>
+                                    <ul>
+                                    <li>Tool's own dependencies</li>
+                                    <li>Project's own dependencies</li>
+                                    <li>Sibling of tool (at folder level) --&gt; This is useful when tool is installed globally</li>
+                                    </ul>
+                                    </div>
+                                    
+                                    		<div class="params">
+                                    			<h4>Parameters:</h4>
+                                    
+                                    			<ul class="params-list">
+                                    				<li class="param">
+                                    						<code class="param-name">pluginDefinition</code>
+                                    						<span class="type">String  |  Object</span>
+                                    
+                                    
+                                    
+                                    				</li>
+                                    				<li class="param">
+                                    						<code class="param-name">context</code>
+                                    						<span class="type">Object</span>
+                                    
+                                    
+                                    
+                                    				</li>
+                                    			</ul>
+                                    		</div>
+                                    
+                                    		<div class="returns">
+                                    			<h4>Returns:</h4>
+                                    
+                                    			<div class="returns-description">
+                                    						<span class="type">PluginDefinition</span>
+                                    			</div>
+                                    		</div>
+                                    
+                                    </div>
+                                    <div id="method-reset" class="method item">
+                                    	<div class="method-signature">
+                                    	<span class="name"><code>reset</code></span>
+                                    
+                                    		<span class="paren">()</span>
+                                    	</div>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    	<div class="meta">
+                                    				<p>
+                                    				Defined in
+                                    		<a href="../files/index.js.html#l315"><code>index.js:315</code></a>
+                                    		</p>
+                                    
+                                    
+                                    
+                                    	</div>
+                                    
+                                    	<div class="description"><p>Forgets all registries and their plugins</p>
+                                    </div>
+                                    
+                                    
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

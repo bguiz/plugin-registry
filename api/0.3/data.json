@@ -1,0 +1,239 @@
+{
+    "project": {
+        "name": "plugin-registry",
+        "description": "Maintains a general purpose registry of plugins",
+        "version": "0.3.0"
+    },
+    "files": {
+        "index.js": {
+            "name": "index.js",
+            "modules": {
+                "PluginRegistry": 1
+            },
+            "classes": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "fors": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "PluginRegistry": {
+            "name": "PluginRegistry",
+            "submodules": {},
+            "classes": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "fors": {
+                "PluginRegistry": 1,
+                "PluginRegistryFluentInterface": 1
+            },
+            "namespaces": {},
+            "tag": "module",
+            "file": "index.js",
+            "line": 192
+        }
+    },
+    "classes": {
+        "PluginRegistry": {
+            "name": "PluginRegistry",
+            "shortname": "PluginRegistry",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "PluginRegistry",
+            "namespace": "",
+            "file": "index.js",
+            "line": 12
+        },
+        "PluginRegistryFluentInterface": {
+            "name": "PluginRegistryFluentInterface",
+            "shortname": "PluginRegistryFluentInterface",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "PluginRegistry",
+            "namespace": "",
+            "file": "index.js",
+            "line": 192,
+            "description": "A fluent interface for interacting with a plugin registry"
+        }
+    },
+    "classitems": [
+        {
+            "file": "index.js",
+            "line": 16,
+            "description": "isAbsolutePath is necessary because `path.isAbsolute()` is not available on NodeJs 0.10.x",
+            "itemtype": "method",
+            "name": "isAbsolutePath",
+            "params": [
+                {
+                    "name": "pathToTest",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "true is pathToTest is absolute",
+                "type": "Boolean"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "PluginRegistry",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 28,
+            "description": "This is the core functionality of this package.\n\nIf `pluginDefinition` is a string, a plugin with this as the name is assumed.\n\nOtherwise, `pluginDefinition` should be an object, with a `name` property.\nThis may also specify an optional `requirePath` property,\nwhich must be an absolute path.\nOtherwise, this guesses the `requirePath` by looking at the following possible locations:\n\n- Tool's own dependencies\n- Project's own dependencies\n- Sibling of tool (at folder level) --> This is useful when tool is installed globally",
+            "itemtype": "method",
+            "name": "parsePluginDefinition",
+            "params": [
+                {
+                    "name": "pluginDefinition",
+                    "description": "",
+                    "type": "String|Object"
+                },
+                {
+                    "name": "context",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "PluginDefinition"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "PluginRegistry",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 162,
+            "description": "Gets a registry with a specified name.\nIf one with this name does not exist, a new one is created (multiton pattern).",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "registryName",
+                    "description": "**optional**",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "PluginRegistryFluentInterface"
+            },
+            "class": "PluginRegistry",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 206,
+            "description": "Sets the context used by this plugin registry.\nMay only be called once.\n\nWhen the tool asks plugin registry to find its plugins by name -\nand not specify an explicit `requirePath`,\nit attempts to infer the location of the plugin from a number of possible locations,\nbased on the location of the tool,\nand the location of the project.\n\nThe default values for each of these work well in most cases, however,\nthey can be explicitly specified too if this is desired.\n\nNote that this method can only be called once -\nit does not make sense for the context to change once set.",
+            "itemtype": "method",
+            "name": "setContext",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "newContext",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 240,
+            "description": "Add one or more plugins to this registry",
+            "itemtype": "method",
+            "name": "addPlugins",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "plugins",
+                    "description": "",
+                    "type": "String|PluginDefinition",
+                    "multiple": true
+                }
+            ],
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 258,
+            "itemtype": "method",
+            "name": "addPluginImpl",
+            "params": [
+                {
+                    "name": "pluginDefinition",
+                    "description": "",
+                    "type": "String|PluginDefinition"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 277,
+            "description": "Returns all plugins of a particular category,\nor an empty array for a non-existent category.",
+            "itemtype": "method",
+            "name": "getAllPluginsOfCategory",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "category",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 290,
+            "description": "Gets the entire plugin registry",
+            "itemtype": "method",
+            "name": "getFullPluginRegistry",
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 300,
+            "description": "Gets the context used by this plugin registry.",
+            "itemtype": "method",
+            "name": "getContext",
+            "class": "PluginRegistryFluentInterface",
+            "module": "PluginRegistry"
+        },
+        {
+            "file": "index.js",
+            "line": 315,
+            "description": "Forgets all registries and their plugins",
+            "itemtype": "method",
+            "name": "reset",
+            "class": "PluginRegistry",
+            "module": "PluginRegistry"
+        }
+    ],
+    "warnings": []
+}

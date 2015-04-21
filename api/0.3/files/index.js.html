@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index.js - plugin-registry</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            plugin-registry
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.3.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/PluginRegistry", "classes/PluginRegistryFluentInterface", "modules/PluginRegistry"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/PluginRegistry.html">PluginRegistry</a></li>
+	                    <li><a href="../classes/PluginRegistryFluentInterface.html">PluginRegistryFluentInterface</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>index.js <small>File</small></h1>
+                        </div>
+                        
+                        <div class="file">
+                            <pre class="prettyprint linenums">
+                        &#x27;use strict&#x27;;
+                        
+                        var path = require(&#x27;path&#x27;);
+                        
+                        var DEFAULT_PLUGIN_CATEGORY = &#x27;task&#x27;;
+                        var DEFAULT_REGISTRY_NAME = &#x27;DEFAULT_REGISTRY&#x27;;
+                        
+                        /**
+                         * @module  PluginRegistry
+                         */
+                        
+                        /**
+                         * @class  PluginRegistry
+                         */
+                        
+                        /**
+                         * isAbsolutePath is necessary because &#x60;path.isAbsolute()&#x60; is not available on NodeJs 0.10.x
+                         *
+                         * @method  isAbsolutePath
+                         * @param  pathToTest {String}
+                         * @return {Boolean} true is pathToTest is absolute
+                         * @private
+                         */
+                        function isAbsolutePath(pathToTest) {
+                          return (path.resolve(pathToTest) === path.normalize(pathToTest));
+                        }
+                        
+                        /**
+                         * This is the core functionality of this package.
+                         *
+                         * If &#x60;pluginDefinition&#x60; is a string, a plugin with this as the name is assumed.
+                         *
+                         * Otherwise, &#x60;pluginDefinition&#x60; should be an object, with a &#x60;name&#x60; property.
+                         * This may also specify an optional &#x60;requirePath&#x60; property,
+                         * which must be an absolute path.
+                         * Otherwise, this guesses the &#x60;requirePath&#x60; by looking at the following possible locations:
+                         *
+                         * - Tool&#x27;s own dependencies
+                         * - Project&#x27;s own dependencies
+                         * - Sibling of tool (at folder level) --&gt; This is useful when tool is installed globally
+                         *
+                         * @method  parsePluginDefinition
+                         * @param  pluginDefinition {String|Object}
+                         * @param  context {Object}
+                         * @return {PluginDefinition}
+                         * @private
+                         */
+                        function parsePluginDefinition(pluginDefinition, context) {
+                          if (typeof pluginDefinition === &#x27;string&#x27;) {
+                            pluginDefinition = {
+                              category: (context.defaultPluginCategory || DEFAULT_PLUGIN_CATEGORY),
+                              name: pluginDefinition
+                            };
+                          }
+                        
+                          var name = pluginDefinition.name;
+                        
+                          // attempt to determine requirePath from name
+                          if (typeof name !== &#x27;string&#x27; || name.length &lt; 1) {
+                            throw new Error(&#x27;Plugins should have a name&#x27;);
+                          }
+                        
+                          // attempt to determine requirePath from name
+                          if (typeof pluginDefinition.category !== &#x27;string&#x27; ||
+                            pluginDefinition.category.length &lt; 1) {
+                            throw new Error(&#x27;Plugins should have a category&#x27;);
+                          }
+                        
+                          var failedRequirePaths = [];
+                          var pathsToTest;
+                          if (typeof pluginDefinition.requirePath === &#x27;string&#x27;) {
+                            if (!isAbsolutePath(pluginDefinition.requirePath)) {
+                              throw new Error(&#x27;Require path specified should be an absolute path&#x27;);
+                            }
+                            pathsToTest = [pluginDefinition.requirePath];
+                          }
+                          else {
+                            var toolPath = context.toolPath;
+                            if (!toolPath) {
+                              // Attempt to determine the path of the file which **first** required
+                              // this module, and assume that that is the tool path (only when not specified)
+                              var parentPath = module.parent &amp;&amp; module.parent.id;
+                              /* istanbul ignore else :
+                                This is not possible to test in jasmine, as the spec file needs to require this file */
+                              if (typeof parentPath === &#x27;string&#x27;) {
+                                toolPath = path.dirname(parentPath);
+                              }
+                              else {
+                                toolPath = path.resolve(__dirname, &#x27;../..&#x27;);
+                              }
+                              context.toolPath = toolPath;
+                            }
+                        
+                            var projectPath = context.projectPath;
+                            if (!projectPath) {
+                              projectPath = path.resolve(&#x27;.&#x27;);
+                              context.projectPath = projectPath;
+                            }
+                        
+                            if (!isAbsolutePath(toolPath)) {
+                              throw new Error(&#x27;Tool path should be an absolute path&#x27;);
+                            }
+                            if (!isAbsolutePath(projectPath)) {
+                              throw new Error(&#x27;Project path should be an absolute path&#x27;);
+                            }
+                        
+                            pathsToTest = [
+                              // first, check if this plugin is installed as one of tool&#x27;s own dependencies
+                              path.resolve(toolPath, &#x27;node_modules&#x27;, name),
+                              // if not, check if this plugin is installed in the local project
+                              path.resolve(projectPath, &#x27;node_modules&#x27;, name),
+                              // lastly, check if this plugin is installed as a global installation
+                              // (sibling folder to tool itself)
+                              path.resolve(toolPath, &#x27;..&#x27;, name)
+                            ];
+                          }
+                        
+                          var requirePath;
+                          var plugin;
+                          pathsToTest.forEach(function testPossibleRequirePathForPlugin(pathToTest) {
+                            if (!requirePath) {
+                              try {
+                                plugin = require(pathToTest);
+                                // If require of the path did not throw, then we should use this path
+                                requirePath = pathToTest;
+                              }
+                              catch (e) {
+                                // Do nothing
+                                failedRequirePaths.push(pathToTest);
+                              }
+                            }
+                          });
+                        
+                          // if none of these exist, then the plugin cannot be found
+                          // fail immediately
+                          if (!requirePath) {
+                            throw new Error([
+                              &#x27;Unable to find require path for plugin named &#x27;+name+&#x27;:&#x27;
+                            ]
+                              .concat(failedRequirePaths.map(function(aPath) {
+                                return &#x27;\t&#x27;+aPath;
+                              }))
+                              .join(&#x27;\n&#x27;));
+                          }
+                          /* istanbul ignore if :
+                             This code path should not be possible to hit due to comprehensive
+                             validation earlier in this function of toolPath and projectPath
+                             However, for for correctness reasons, this check is still included */
+                          else if (!isAbsolutePath(requirePath)) {
+                            throw new Error(&#x27;Require path should resolve to an absolute path&#x27;);
+                          }
+                          else {
+                            pluginDefinition.requirePath = requirePath;
+                            pluginDefinition.plugin = plugin;
+                          }
+                        
+                          return pluginDefinition;
+                        }
+                        
+                        var registries = {};
+                        
+                        /**
+                         * Gets a registry with a specified name.
+                         * If one with this name does not exist, a new one is created (multiton pattern).
+                         *
+                         * @method get
+                         * @for  PluginRegistry
+                         * @param  registryName {String} **optional**
+                         * @return {PluginRegistryFluentInterface}
+                         */
+                        function get(registryName) {
+                          var context = {};
+                          var contextHasBeenSet = false;
+                        
+                          if (!registryName) {
+                            registryName = DEFAULT_REGISTRY_NAME;
+                          }
+                          if (typeof registryName !== &#x27;string&#x27; || registryName.length &lt; 1) {
+                            throw new Error(&#x27;Invalid name for registry&#x27;);
+                          }
+                          var fluent = registries[registryName];
+                        
+                          // If a registry by this name exists, simply return it
+                          // (Multiton pattern)
+                          if (!!fluent) {
+                            return fluent;
+                          }
+                        
+                          // Otherwise create a new registry with a fluent interface,
+                          // cache it, then return it
+                        
+                          /**
+                           * A fluent interface for interacting with a plugin registry
+                           *
+                           * @class PluginRegistryFluentInterface
+                           */
+                          fluent = {
+                            registry: {},
+                            context: setContext,
+                            add: addPlugins,
+                            getAllOfCategory: getAllPluginsOfCategory,
+                            getFullRegistry: getFullPluginRegistry,
+                            getContext: getContext,
+                          };
+                        
+                          /**
+                           * Sets the context used by this plugin registry.
+                           * May only be called once.
+                           *
+                           * When the tool asks plugin registry to find its plugins by name -
+                           * and not specify an explicit &#x60;requirePath&#x60;,
+                           * it attempts to infer the location of the plugin from a number of possible locations,
+                           * based on the location of the tool,
+                           * and the location of the project.
+                           *
+                           * The default values for each of these work well in most cases, however,
+                           * they can be explicitly specified too if this is desired.
+                           *
+                           * Note that this method can only be called once -
+                           * it does not make sense for the context to change once set.
+                           *
+                           * @method setContext
+                           * @for  PluginRegistryFluentInterface
+                           * @chainable
+                           * @param newContext {Object}
+                           */
+                          function setContext(newContext) {
+                            if (!newContext) {
+                              throw new Error(&#x27;Invalid context&#x27;);
+                            }
+                            if (contextHasBeenSet) {
+                              throw new Error(&#x27;Can only set context once for registry &#x27;+registryName);
+                            }
+                            context = newContext;
+                            contextHasBeenSet = true;
+                        
+                            return fluent;
+                          }
+                        
+                          /**
+                           * Add one or more plugins to this registry
+                           *
+                           * @method addPlugins
+                           * @for  PluginRegistryFluentInterface
+                           * @chainable
+                           * @param ...plugins {String|PluginDefinition}
+                           */
+                          function addPlugins() {
+                            var argumentsAsArray = Array.prototype.slice.apply(arguments);
+                            var pluginDefinitions = [];
+                            argumentsAsArray.forEach(function(argument) {
+                              pluginDefinitions = pluginDefinitions.concat(argument);
+                            });
+                            pluginDefinitions.forEach(addPluginImpl);
+                            return fluent;
+                          }
+                        
+                          /**
+                           * @method addPluginImpl
+                           * @for  PluginRegistryFluentInterface
+                           * @param pluginDefinition {String|PluginDefinition}
+                           * @private
+                           */
+                          function addPluginImpl(pluginDefinition) {
+                            var parsedDefinition = parsePluginDefinition(pluginDefinition, context);
+                        
+                            // add to the appropriate registry
+                            var category = parsedDefinition.category;
+                            var registryCategory = fluent.registry[category];
+                            if (!registryCategory) {
+                              registryCategory = [];
+                              fluent.registry[category] = registryCategory;
+                            }
+                            registryCategory.push(parsedDefinition);
+                          }
+                        
+                          /**
+                           * Returns all plugins of a particular category,
+                           * or an empty array for a non-existent category.
+                           *
+                           * @method getAllPluginsOfCategory
+                           * @for  PluginRegistryFluentInterface
+                           * @chainable
+                           * @param category {String}
+                           */
+                          function getAllPluginsOfCategory(category) {
+                            return (fluent.registry[category] || []);
+                          }
+                        
+                          /**
+                           * Gets the entire plugin registry
+                           *
+                           * @method getFullPluginRegistry
+                           * @for  PluginRegistryFluentInterface
+                           */
+                          function getFullPluginRegistry() {
+                            return fluent.registry;
+                          }
+                        
+                          /**
+                           * Gets the context used by this plugin registry.
+                           *
+                           * @method getContext
+                           * @for  PluginRegistryFluentInterface
+                           */
+                          function getContext() {
+                            return context;
+                          }
+                        
+                          registries[registryName] = fluent;
+                        
+                          return fluent;
+                        }
+                        
+                        /**
+                         * Forgets all registries and their plugins
+                         *
+                         * @method reset
+                         * @for  PluginRegistry
+                         */
+                        function reset() {
+                          registries = {};
+                        }
+                        
+                        module.exports = {
+                          get: get,
+                          reset: reset,
+                        };
+                        
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
